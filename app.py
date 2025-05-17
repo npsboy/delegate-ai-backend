@@ -1,35 +1,12 @@
-from flask import Flask, request, jsonify
-from dotenv import load_dotenv
-from openai import OpenAI
-import os
+from flask import Flask, jsonify
 
+app = Flask(__name__)
 
-load_dotenv() #loads the environment variables from .env file
-client = OpenAI()
-app = Flask(__name__) #_name_ tells flask that it is the main module
+@app.route('/')
+def index():
+    return jsonify({"message": "Hello Railway!"})
 
-@app.route("/")
-def home():
-    return "DelegateAI backend is running!"
-
-@app.route("/chat", methods=["POST"])
-def chat():
-    data = request.get_json()
-    prompt = data.get("prompt")
-    if not prompt:
-        return jsonify({"error": "No prompt provided"}), 400
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-        reply = response.choices[0].message.content
-        return jsonify({"response": reply})
-    except Exception as error:
-        return jsonify({"error": str(error)}), 500
-    
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))  # Railway sets the PORT env variable, default to 5000
+    import os
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
