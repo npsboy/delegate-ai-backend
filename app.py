@@ -21,7 +21,7 @@ def chat():
         return jsonify({"error": "No prompt provided"}), 400
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="04-mini",
             messages=[
                 {"role": "user", "content": prompt}
             ]
